@@ -4,11 +4,23 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { NavigationContainer } from '@react-navigation/native';
 import Navigator from './src/navigation/Navigator';
+import { PermissionProvider } from './src/context/PermissionContext';
+
+const AppState = ({children}: any) =>{
+
+  return(
+    <PermissionProvider>
+    {children}
+  </PermissionProvider>
+  )
+}
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Navigator/>
+      <AppState>
+        <Navigator/>
+      </AppState>
     </NavigationContainer>
   )
 }
