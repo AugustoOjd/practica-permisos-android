@@ -7,7 +7,6 @@ import Navigator from './src/navigation/Navigator';
 import { PermissionProvider } from './src/context/PermissionContext';
 
 const AppState = ({children}: any) =>{
-
   return(
     <PermissionProvider>
     {children}
