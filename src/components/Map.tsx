@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { useLocation } from '../hooks/useLocation';
 import LoadingScreen from '../Screens/LoadingScreen';
+import Fab from './Fab';
 
 
 
@@ -13,7 +14,19 @@ interface Props {
 
 const Map = ( { markers  }: Props) => {
 
-     const { hasLocation, initialPosition } = useLocation()
+     const { hasLocation, initialPosition, getCurrentLocation } = useLocation()
+
+     const mapViewRef = useRef<MapView>()
+
+
+     const centerPosition = async () =>{
+
+      const { latitude, longitude } = await getCurrentLocation()
+
+      mapViewRef.current?.animateCamera({
+        center: { latitude, longitude}
+      })
+     }
 
      if( !hasLocation ){
         return <LoadingScreen/>
@@ -21,6 +34,7 @@ const Map = ( { markers  }: Props) => {
   return (
     <>
         <MapView
+          ref={ (el) => mapViewRef.current = el! }
           provider={PROVIDER_GOOGLE}
           style={{ flex: 1}}
           showsUserLocation
@@ -42,6 +56,16 @@ const Map = ( { markers  }: Props) => {
         description={'esto es marker'}
         /> */}
         </MapView>
+
+        <Fab 
+          iconName='locate-outline'
+          onPress={ ()=> centerPosition()}
+          style={{
+            position: 'absolute',
+            bottom: 10,
+            right: 10
+          }}
+        />
     </>
   )
 }
